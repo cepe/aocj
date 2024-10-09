@@ -17,10 +17,31 @@ public class Day13 extends Solution {
                 .map(reflection -> switch (reflection) {
                     case Vertical v -> v.pos;
                     case Horizontal h -> h.pos * 100;
+                    default -> throw new IllegalStateException("Should not ever happen");
                 }).reduce(0, Integer::sum);
 
         return Integer.toString(answer);
     }
+
+    @Override
+    public String secondStar(String input) {
+        final var patterns = input.split("\n\n");
+
+        final var reflections = Arrays.stream(patterns)
+                .map(this::pattern)
+                .map(this::reflection2)
+                .toList();
+
+        final var answer = reflections.stream()
+                .map(reflection -> switch (reflection) {
+                    case Vertical v -> v.pos;
+                    case Horizontal h -> h.pos * 100;
+                    case NoMirror i -> throw new IllegalStateException("Should not ever happen");
+                }).reduce(0, Integer::sum);
+
+        return Integer.toString(answer);
+    }
+
 
     private char[][] pattern(String pattern) {
         final var stringList = Arrays.stream(pattern.split("\n")).toList();
@@ -47,7 +68,7 @@ public class Day13 extends Solution {
         return charArray;
     }
 
-    private Reflection reflection(char[][] pattern) {
+    private Reflection reflection(char[][] pattern, Reflection toAvoid) {
         // search for vertical line
         var length = pattern[0].length;
         for (int pos = 0; pos <= length - 2; pos++) {
@@ -62,7 +83,10 @@ public class Day13 extends Solution {
                 }
             }
             if (mirrored) {
-                return new Vertical(pos + 1);
+                final var reflection = new Vertical(pos + 1);
+                if (!reflection.equals(toAvoid)) {
+                    return reflection;
+                }
             }
         }
 
@@ -72,7 +96,7 @@ public class Day13 extends Solution {
             int range = Math.min(pos, length - pos - 2);
             boolean mirrored = true;
             for (int r = 0; r <= range; r++) {
-                for (int col = 0; col < pattern[0].length; col ++) {
+                for (int col = 0; col < pattern[0].length; col++) {
                     if (pattern[pos + 1 + r][col] != pattern[pos - r][col]) {
                         mirrored = false;
                         break;
@@ -80,23 +104,50 @@ public class Day13 extends Solution {
                 }
             }
             if (mirrored) {
-                return new Horizontal(pos + 1);
+                final var reflection = new Horizontal(pos + 1);
+                if (!reflection.equals(toAvoid)) {
+                    return reflection;
+                }
             }
         }
 
-        throw new IllegalStateException("Mirror not found! Pattern: %s");
+        return new NoMirror();
     }
 
-    @Override
-    public String secondStar(String input) {
-        return String.valueOf(3);
+    private Reflection reflection(char[][] pattern) {
+        return reflection(pattern, new NoMirror());
     }
+
+    private Reflection reflection2(char[][] chars) {
+        var orginalReflection = reflection(chars);
+        for (int row = 0; row < chars.length; row++) {
+            for (int col = 0; col < chars[0].length; col++) {
+                toggle(chars, row, col);
+                final var newReflection = reflection(chars, orginalReflection);
+                toggle(chars, row, col);
+                if (!newReflection.equals(new NoMirror())) {
+                    return newReflection;
+                }
+            }
+        }
+
+        throw new IllegalStateException("New mirror not found!");
+    }
+
+    private void toggle(char[][] chars, int row, int col) {
+        if (chars[row][col] == '.') {
+            chars[row][col] = '#';
+        } else if (chars[row][col] == '#'){
+            chars[row][col] = '.';
+        } else throw new IllegalStateException();
+    }
+
 
     public static void main(String[] args) {
-        new Day13().run("ex.in");
+        new Day13().run("input.in");
     }
 
-    private sealed interface Reflection permits Horizontal, Vertical {
+    private sealed interface Reflection permits Horizontal, Vertical , NoMirror{
     }
 
     private record Horizontal(int pos) implements Reflection {
@@ -104,4 +155,6 @@ public class Day13 extends Solution {
 
     private record Vertical(int pos) implements Reflection {
     }
+
+    private record NoMirror() implements Reflection {}
 }
