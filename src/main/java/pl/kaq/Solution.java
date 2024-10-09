@@ -3,6 +3,7 @@ package pl.kaq;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public abstract class Solution {
@@ -35,5 +36,39 @@ public abstract class Solution {
         var input = input(fileName);
         System.out.println(firstStar(input));
         System.out.println(secondStar(input));
+    }
+
+    char[][] board(String string) {
+        final var stringList = Arrays.stream(string.split("\n")).toList();
+        if (stringList.isEmpty()) {
+            return new char[0][0];
+        }
+
+        int rows = stringList.size();
+        int cols = stringList.stream().mapToInt(String::length).max().orElse(0);
+
+        char[][] charArray = new char[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            String str = stringList.get(i);
+            for (int j = 0; j < str.length(); j++) {
+                charArray[i][j] = str.charAt(j);
+            }
+
+            for (int j = str.length(); j < cols; j++) {
+                charArray[i][j] = ' ';
+            }
+        }
+
+        return charArray;
+    }
+
+    void print(char [][] board) {
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+                System.out.printf("%c", board[row][col]);
+            }
+            System.out.println();
+        }
     }
 }

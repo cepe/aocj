@@ -9,7 +9,7 @@ public class Day13 extends Solution {
         final var patterns = input.split("\n\n");
 
         final var reflections = Arrays.stream(patterns)
-                .map(this::pattern)
+                .map(this::board)
                 .map(this::reflection)
                 .toList();
 
@@ -28,7 +28,7 @@ public class Day13 extends Solution {
         final var patterns = input.split("\n\n");
 
         final var reflections = Arrays.stream(patterns)
-                .map(this::pattern)
+                .map(this::board)
                 .map(this::reflection2)
                 .toList();
 
@@ -43,30 +43,6 @@ public class Day13 extends Solution {
     }
 
 
-    private char[][] pattern(String pattern) {
-        final var stringList = Arrays.stream(pattern.split("\n")).toList();
-        if (stringList.isEmpty()) {
-            return new char[0][0];
-        }
-
-        int rows = stringList.size();
-        int cols = stringList.stream().mapToInt(String::length).max().orElse(0);
-
-        char[][] charArray = new char[rows][cols];
-
-        for (int i = 0; i < rows; i++) {
-            String str = stringList.get(i);
-            for (int j = 0; j < str.length(); j++) {
-                charArray[i][j] = str.charAt(j);
-            }
-
-            for (int j = str.length(); j < cols; j++) {
-                charArray[i][j] = ' ';
-            }
-        }
-
-        return charArray;
-    }
 
     private Reflection reflection(char[][] pattern, Reflection toAvoid) {
         // search for vertical line

@@ -34,7 +34,7 @@ public abstract class TestBase {
 
     private DynamicTest makeFirstStarTest(TestCase testCase) {
         return makeTest(
-                testCase.inputName() + " - first star",
+                "first star - " + testCase.inputName(),
                 testCase.input(),
                 testCase.output().firstStar(),
                 solution::firstStar
@@ -43,7 +43,7 @@ public abstract class TestBase {
 
     private DynamicTest makeSecondStarTest(TestCase testCase) {
         return makeTest(
-                testCase.inputName() + " - second star",
+                "second star - " + testCase.inputName(),
                 testCase.input(),
                 testCase.output().secondStar(),
                 solution::secondStar
