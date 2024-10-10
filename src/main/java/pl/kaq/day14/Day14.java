@@ -1,4 +1,6 @@
-package pl.kaq;
+package pl.kaq.day14;
+
+import pl.kaq.Solution;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -1,4 +1,6 @@
-package pl.kaq;
+package pl.kaq.day13;
+
+import pl.kaq.Solution;
 
 import java.util.Arrays;
 

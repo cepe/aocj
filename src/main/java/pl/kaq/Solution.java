@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public abstract class Solution {
-    abstract String firstStar(String input);
+    public abstract String firstStar(String input);
 
-    abstract String secondStar(String input);
+    public abstract String secondStar(String input);
 
     private String input(String fileName) {
         var classloader = Thread.currentThread().getContextClassLoader();
@@ -32,13 +32,13 @@ public abstract class Solution {
         }
     }
 
-    void run(String fileName) {
+    public void run(String fileName) {
         var input = input(fileName);
         System.out.println(firstStar(input));
         System.out.println(secondStar(input));
     }
 
-    char[][] board(String string) {
+    public char[][] board(String string) {
         final var stringList = Arrays.stream(string.split("\n")).toList();
         if (stringList.isEmpty()) {
             return new char[0][0];
@@ -63,7 +63,7 @@ public abstract class Solution {
         return charArray;
     }
 
-    void print(char [][] board) {
+    public void print(char [][] board) {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
                 System.out.printf("%c", board[row][col]);

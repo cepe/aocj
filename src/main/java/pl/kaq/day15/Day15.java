@@ -1,57 +1,13 @@
-package pl.kaq;
+package pl.kaq.day15;
+
+import pl.kaq.Solution;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-
-sealed interface Step permits MinusStep, EqualStep {
-}
-
-record MinusStep(String label) implements Step {
-}
-
-record EqualStep(String label, Integer focalLength) implements Step {
-}
-
-class Box {
-    private final LinkedHashMap<String, Integer> lenses = new LinkedHashMap<>();
-    private final int boxNumber;
-
-    public Box(int boxNumber) {
-        this.boxNumber = boxNumber;
-    }
-
-    public void minus(String label) {
-        lenses.remove(label);
-    }
-
-    public void addOrUpdate(String label, Integer focalLength) {
-        lenses.put(label, focalLength);
-    }
-
-    public int focalPower() {
-        var sum = new AtomicInteger();
-        var position = new AtomicInteger(1);
-
-        lenses.forEach((key, value) -> {
-            final var delta = (boxNumber + 1) * position.get() * value;
-            sum.addAndGet(delta);
-            position.getAndIncrement();
-        });
-
-        return sum.get();
-    }
-
-    @Override
-    public String toString() {
-        return lenses.toString();
-    }
-}
 
 public class Day15 extends Solution {
     @Override
-    String firstStar(String input) {
+    public String firstStar(String input) {
         var sum = Arrays.stream(input.split(","))
                 .map(String::trim)
                 .mapToInt(this::hash)
@@ -72,7 +28,7 @@ public class Day15 extends Solution {
     }
 
     @Override
-    String secondStar(String input) {
+    public String secondStar(String input) {
         var boxes = IntStream.range(0, 256)
                 .mapToObj(i -> new Box(i))
                 .toArray(Box[]::new);
