@@ -107,7 +107,8 @@ public abstract class TestBase {
     }
 
     private String directory() {
-        return solution.getClass().getSimpleName().toLowerCase();
-    }
+        final Class<? extends Solution> solutionClass = solution.getClass();
+        final var packageParts = solutionClass.getPackageName().split("\\.");
+        return packageParts[packageParts.length - 2] + "/" + packageParts[packageParts.length - 1];    }
 
 }

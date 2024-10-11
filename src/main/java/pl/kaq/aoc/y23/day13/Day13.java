@@ -1,4 +1,4 @@
-package pl.kaq.day13;
+package pl.kaq.aoc.y23.day13;
 
 import pl.kaq.Solution;
 

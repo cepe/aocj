@@ -1,6 +1,7 @@
 package pl.kaq;
 
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -10,27 +11,6 @@ public abstract class Solution {
     public abstract String firstStar(String input);
 
     public abstract String secondStar(String input);
-
-    private String input(String fileName) {
-        var classloader = Thread.currentThread().getContextClassLoader();
-        var inputPath = this.getClass().getSimpleName().toLowerCase() + "/" + fileName;
-        var inputFileUrl = classloader.getResource(inputPath);
-
-        if (inputFileUrl == null) {
-            throw new IllegalStateException("Unable to read %s".formatted(inputPath));
-        }
-
-        try {
-            final var path = Path.of(inputFileUrl.toURI());
-            try (var lines = Files.lines(path)) {
-                return lines.collect(Collectors.joining("\n"));
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to load: %s".formatted(path));
-            }
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void run(String fileName) {
         var input = input(fileName);
@@ -70,5 +50,36 @@ public abstract class Solution {
             }
             System.out.println();
         }
+    }
+
+    private String input(String fileName) {
+        final var inputFileUrl = getUrl(fileName);
+
+        try {
+            final var path = Path.of(inputFileUrl.toURI());
+            try (var lines = Files.lines(path)) {
+                return lines.collect(Collectors.joining("\n"));
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to load: %s".formatted(path));
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private URL getUrl(String fileName) {
+        var classloader = Thread.currentThread().getContextClassLoader();
+        final Class<? extends Solution> solutionClass = this.getClass();
+        final var packageParts = solutionClass.getPackageName().split("\\.");
+
+        var inputDirectory = packageParts[packageParts.length - 2] + "/" + packageParts[packageParts.length - 1];
+
+        var inputPath = inputDirectory + "/" + fileName;
+        var inputFileUrl = classloader.getResource(inputPath);
+
+        if (inputFileUrl == null) {
+            throw new IllegalStateException("Unable to read %s".formatted(inputPath));
+        }
+        return inputFileUrl;
     }
 }

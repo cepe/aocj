@@ -1,4 +1,4 @@
-package pl.kaq.day15;
+package pl.kaq.aoc.y23.day15;
 
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
