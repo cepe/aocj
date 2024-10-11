@@ -1,6 +1,7 @@
 package pl.kaq.aoc.y23.day13;
 
 import pl.kaq.Solution;
+import pl.kaq.model.Board;
 
 import java.util.Arrays;
 
@@ -45,16 +46,14 @@ public class Day13 extends Solution {
     }
 
 
-
-    private Reflection reflection(char[][] pattern, Reflection toAvoid) {
-        // search for vertical line
-        var length = pattern[0].length;
+    private Reflection reflection(Board board, Reflection toAvoid) {
+        var length = board.noCols();
         for (int pos = 0; pos <= length - 2; pos++) {
             int range = Math.min(pos, length - pos - 2);
             boolean mirrored = true;
-            for (char[] chars : pattern) {
+            for (char[] row : board.rows()) {
                 for (int r = 0; r <= range; r++) {
-                    if (chars[pos + 1 + r] != chars[pos - r]) {
+                    if (row[pos + 1 + r] != row[pos - r]) {
                         mirrored = false;
                         break;
                     }
@@ -69,13 +68,13 @@ public class Day13 extends Solution {
         }
 
         // search for horizontal line
-        length = pattern.length;
+        length = board.noRows();
         for (int pos = 0; pos <= length - 2; pos++) {
             int range = Math.min(pos, length - pos - 2);
             boolean mirrored = true;
             for (int r = 0; r <= range; r++) {
-                for (int col = 0; col < pattern[0].length; col++) {
-                    if (pattern[pos + 1 + r][col] != pattern[pos - r][col]) {
+                for (int col = 0; col < board.noCols(); col++) {
+                    if (board.at(pos + 1 + r, col) != board.at(pos - r, col)) {
                         mirrored = false;
                         break;
                     }
@@ -92,17 +91,17 @@ public class Day13 extends Solution {
         return new NoMirror();
     }
 
-    private Reflection reflection(char[][] pattern) {
-        return reflection(pattern, new NoMirror());
+    private Reflection reflection(Board board) {
+        return reflection(board, new NoMirror());
     }
 
-    private Reflection reflection2(char[][] chars) {
-        var orginalReflection = reflection(chars);
-        for (int row = 0; row < chars.length; row++) {
-            for (int col = 0; col < chars[0].length; col++) {
-                toggle(chars, row, col);
-                final var newReflection = reflection(chars, orginalReflection);
-                toggle(chars, row, col);
+    private Reflection reflection2(Board board) {
+        var orginalReflection = reflection(board);
+        for (int row = 0; row < board.noRows(); row++) {
+            for (int col = 0; col < board.noCols(); col++) {
+                toggle(board, row, col);
+                final var newReflection = reflection(board, orginalReflection);
+                toggle(board, row, col);
                 if (!newReflection.equals(new NoMirror())) {
                     return newReflection;
                 }
@@ -112,11 +111,11 @@ public class Day13 extends Solution {
         throw new IllegalStateException("New mirror not found!");
     }
 
-    private void toggle(char[][] chars, int row, int col) {
-        if (chars[row][col] == '.') {
-            chars[row][col] = '#';
-        } else if (chars[row][col] == '#'){
-            chars[row][col] = '.';
+    private void toggle(Board board, int row, int col) {
+        if (board.at(row, col) == '.') {
+            board.setAt(row, col, '#');
+        } else if (board.at(row, col) == '#') {
+            board.setAt(row, col, '.');
         } else throw new IllegalStateException();
     }
 
@@ -125,7 +124,7 @@ public class Day13 extends Solution {
         new Day13().run("input.in");
     }
 
-    private sealed interface Reflection permits Horizontal, Vertical , NoMirror{
+    private sealed interface Reflection permits Horizontal, Vertical, NoMirror {
     }
 
     private record Horizontal(int pos) implements Reflection {
@@ -134,5 +133,6 @@ public class Day13 extends Solution {
     private record Vertical(int pos) implements Reflection {
     }
 
-    private record NoMirror() implements Reflection {}
+    private record NoMirror() implements Reflection {
+    }
 }

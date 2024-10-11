@@ -1,5 +1,7 @@
 package pl.kaq;
 
+import pl.kaq.model.Board;
+
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -18,8 +20,12 @@ public abstract class Solution {
         System.out.println(secondStar(input));
     }
 
-    public char[][] board(String string) {
-        final var stringList = Arrays.stream(string.split("\n")).toList();
+    public Board board(String input) {
+        return new Board(parseBoard(input));
+    }
+
+    private char[][] parseBoard(String input) {
+        final var stringList = Arrays.stream(input.split("\n")).toList();
         if (stringList.isEmpty()) {
             return new char[0][0];
         }
@@ -43,14 +49,7 @@ public abstract class Solution {
         return charArray;
     }
 
-    public void print(char [][] board) {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[0].length; col++) {
-                System.out.printf("%c", board[row][col]);
-            }
-            System.out.println();
-        }
-    }
+
 
     private String input(String fileName) {
         final var inputFileUrl = getUrl(fileName);

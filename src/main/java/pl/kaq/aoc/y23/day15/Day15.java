@@ -30,7 +30,7 @@ public class Day15 extends Solution {
     @Override
     public String secondStar(String input) {
         var boxes = IntStream.range(0, 256)
-                .mapToObj(i -> new Box(i))
+                .mapToObj(Box::new)
                 .toArray(Box[]::new);
 
         Arrays.stream(input.split(","))

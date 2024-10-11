@@ -1,6 +1,8 @@
 package pl.kaq.aoc.y23.day16;
 
 import pl.kaq.Solution;
+import pl.kaq.model.Board;
+import pl.kaq.model.Position;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -9,70 +11,15 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
-record Board(char[][] board) {
-    boolean onBoard(Position position) {
-        return position.row() >= 0 && position.row() < board.length
-                && position.col() >= 0 && position.col() < board[0].length;
-    }
-
-    char at(Position position) {
-        assert onBoard(position);
-        return board[position.row()][position.col()];
-    }
-}
-
-
-record Position(int row, int col) {
-
-    public Position left() {
-        return new Position(row, col - 1);
-    }
-
-    public Position right() {
-        return new Position(row, col + 1);
-    }
-
-    public Position up() {
-        return new Position(row - 1, col);
-    }
-
-    public Position down() {
-        return new Position(row + 1, col);
-    }
-}
-
-record Beam(Position position, char direction) {
-
-    Beam fork() {
-        return new Beam(new Position(position.row(), position.col()), this.direction);
-    }
-
-    public Beam moveRight() {
-        return new Beam(position.right(), 'R');
-    }
-
-    public Beam moveUp() {
-        return new Beam(position.up(), 'U');
-    }
-
-    public Beam moveDown() {
-        return new Beam(position.down(), 'D');
-    }
-
-    public Beam moveLeft() {
-        return new Beam(position.left(), 'L');
-    }
-}
-
 public class Day16 extends Solution {
     @Override
     public String firstStar(String input) {
-        var board = new Board(board(input));
-        return Integer.toString(calculateEnergy(board, new Beam(new Position(0, 0), 'R')));
+        var board = board(input);
+        return Integer.toString(calculateEnergy(board, new Beam(new pl.kaq.model.Position(0, 0), 'R')));
     }
 
     private static int calculateEnergy(Board board, Beam startingBeam) {
-        final var seenPositions = new HashSet<Position>();
+        final var seenPositions = new HashSet<pl.kaq.model.Position>();
         seenPositions.add(startingBeam.position());
         var seenBeams = new HashSet<Beam>();
         seenBeams.add(startingBeam);
@@ -137,16 +84,16 @@ public class Day16 extends Solution {
 
     @Override
     public String secondStar(String input) {
-        var board = new Board(board(input));
+        var board = board(input);
 
         return Integer.toString(Stream.concat(
                         Stream.concat(
-                                IntStream.range(0, board.board().length - 1).mapToObj(i -> new Beam(new Position(i, 0), 'R')),
-                                IntStream.range(0, board.board().length - 1).mapToObj(i -> new Beam(new Position(i, board.board()[0].length - 1), 'L'))
+                                IntStream.range(0, board.noRows() - 1).mapToObj(i -> new Beam(new pl.kaq.model.Position(i, 0), 'R')),
+                                IntStream.range(0, board.noRows() - 1).mapToObj(i -> new Beam(new pl.kaq.model.Position(i, board.noCols() - 1), 'L'))
                         ),
                         Stream.concat(
-                                IntStream.range(0, board.board()[0].length - 1).mapToObj(i -> new Beam(new Position(0, i), 'D')),
-                                IntStream.range(0, board.board()[0].length - 1).mapToObj(i -> new Beam(new Position(board.board().length - 1, i), 'U'))
+                                IntStream.range(0, board.noCols() - 1).mapToObj(i -> new Beam(new pl.kaq.model.Position(0, i), 'D')),
+                                IntStream.range(0, board.noCols() - 1).mapToObj(i -> new Beam(new Position(board.noRows() - 1, i), 'U'))
                         ))
                 .mapToInt(beam -> calculateEnergy(board, beam))
                 .max()

@@ -1,10 +1,9 @@
 package pl.kaq.aoc.y23.day14;
 
 import pl.kaq.Solution;
+import pl.kaq.model.Board;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class Day14 extends Solution {
 
@@ -15,11 +14,11 @@ public class Day14 extends Solution {
         return Long.toString(load(board));
     }
 
-    private long load(char[][] board) {
+    private long load(Board board) {
         long sum = 0;
-        long rowLoad = board.length;
+        long rowLoad = board.noRows();
 
-        for (char[] row : board) {
+        for (char[] row : board.rows()) {
             for (char c : row) {
                 if (c == 'O') {
                     sum += rowLoad;
@@ -31,78 +30,78 @@ public class Day14 extends Solution {
         return sum;
     }
 
-    private void north(char[][] board) {
-        for (int col = 0; col < board[0].length; col++) {
+    private void north(Board board) {
+        for (int col = 0; col < board.noCols(); col++) {
             north(board, col);
         }
     }
 
-    private void north(char[][] board, int col) {
-        for (int row = 0; row < board.length; row++) {
-            if (board[row][col] == 'O') {
+    private void north(Board board, int col) {
+        for (int row = 0; row < board.noRows(); row++) {
+            if (board.at(row, col) == 'O') {
                 int prev = row - 1;
-                while (prev >= 0 && board[prev][col] == '.') {
-                    board[prev + 1][col] = '.';
+                while (prev >= 0 && board.at(prev, col) == '.') {
+                    board.setAt(prev + 1, col, '.');
                     prev--;
                 }
-                board[prev + 1][col] = 'O';
+                board.setAt(prev + 1, col, 'O');
             }
         }
     }
 
-    private void south(char[][] board) {
-        for (int col = 0; col < board[0].length; col++) {
+    private void south(Board board) {
+        for (int col = 0; col < board.noCols(); col++) {
             south(board, col);
         }
     }
 
-    private void south(char[][] board, int col) {
-        for (int row = board.length - 1; row >= 0; row--) {
-            if (board[row][col] == 'O') {
+    private void south(Board board, int col) {
+        for (int row = board.noRows() - 1; row >= 0; row--) {
+            if (board.at(row, col) == 'O') {
                 int prev = row + 1;
-                while (prev < board.length && board[prev][col] == '.') {
-                    board[prev - 1][col] = '.';
+                while (prev < board.noRows() && board.at(prev, col) == '.') {
+                    board.setAt(prev - 1, col, '.');
                     prev++;
                 }
-                board[prev - 1][col] = 'O';
+                board.setAt(prev - 1, col, 'O');
             }
         }
     }
 
-    private void east(char[][] board) {
-        for (int row = 0; row < board.length; row++) {
+    private void east(Board board) {
+        for (int row = 0; row < board.noRows(); row++) {
             east(board, row);
         }
     }
 
-    private void east(char[][] board, int row) {
-        for (int col = board[0].length - 1; col >= 0; col--) {
-            if (board[row][col] == 'O') {
+    private void east(Board board, int row) {
+        for (int col = board.noCols() - 1; col >= 0; col--) {
+            if (board.at(row, col) == 'O') {
                 int prev = col + 1;
-                while (prev < board.length && board[row][prev] == '.') {
-                    board[row][prev - 1] = '.';
+                while (prev < board.noRows() && board.at(row, prev) == '.') {
+                    board.setAt(row, prev - 1, '.');
                     prev++;
                 }
-                board[row][prev - 1] = 'O';
+                board.setAt(row, prev - 1, 'O');
             }
         }
     }
 
-    private void west(char[][] board) {
-        for (int row = 0; row < board.length; row++) {
+    private void west(Board board) {
+        for (int row = 0; row < board.noRows(); row++) {
             west(board, row);
         }
     }
 
-    private void west(char[][] board, int row) {
-        for (int col = 0; col < board[0].length; col++) {
-            if (board[row][col] == 'O') {
+    private void west(Board board, int row) {
+        for (int col = 0; col < board.noCols(); col++) {
+            if (board.at(row, col) == 'O') {
                 int prev = col - 1;
-                while (prev >= 0 && board[row][prev] == '.') {
-                    board[row][prev + 1] = '.';
+                while (prev >= 0 && board.at(row, prev) == '.') {
+                    board.setAt(row, prev + 1, '.');
                     prev--;
                 }
-                board[row][prev + 1] = 'O';
+                board.setAt(row, prev + 1, 'O');
             }
         }
     }
@@ -122,7 +121,7 @@ public class Day14 extends Solution {
             south(board);
             east(board);
 
-            var strRep = toStr(board);
+            var strRep = board.asStringLine();
             if (seen.containsKey(strRep)) {
                 x = (cycles - seen.get(strRep)) % (cycle - seen.get(strRep)) + seen.get(strRep);
                 break;
@@ -140,14 +139,7 @@ public class Day14 extends Solution {
             east(board);
         }
 
-
         return Long.toString(load(board));
-    }
-
-    private String toStr(char[][] board) {
-        return Arrays.stream(board)
-                .map(String::new)
-                .collect(Collectors.joining());
     }
 
 
