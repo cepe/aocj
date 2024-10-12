@@ -7,19 +7,20 @@ import pl.kaq.model.Position;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static java.util.stream.IntStream.range;
 
 
 public class Day16 extends Solution {
     @Override
     public String firstStar(String input) {
         var board = board(input);
-        return Integer.toString(calculateEnergy(board, new Beam(new pl.kaq.model.Position(0, 0), 'R')));
+        return Integer.toString(calculateEnergy(board, new Beam(new Position(0, 0), 'R')));
     }
 
     private static int calculateEnergy(Board board, Beam startingBeam) {
-        final var seenPositions = new HashSet<pl.kaq.model.Position>();
+        final var seenPositions = new HashSet<Position>();
         seenPositions.add(startingBeam.position());
         var seenBeams = new HashSet<Beam>();
         seenBeams.add(startingBeam);
@@ -77,7 +78,6 @@ public class Day16 extends Solution {
                     break;
                 }
             }
-
         }
         return newBeams;
     }
@@ -88,12 +88,12 @@ public class Day16 extends Solution {
 
         return Integer.toString(Stream.concat(
                         Stream.concat(
-                                IntStream.range(0, board.noRows() - 1).mapToObj(i -> new Beam(new pl.kaq.model.Position(i, 0), 'R')),
-                                IntStream.range(0, board.noRows() - 1).mapToObj(i -> new Beam(new pl.kaq.model.Position(i, board.noCols() - 1), 'L'))
+                                range(0, board.noRows() - 1).mapToObj(i -> new Beam(new Position(i, 0), 'R')),
+                                range(0, board.noRows() - 1).mapToObj(i -> new Beam(new Position(i, board.noCols() - 1), 'L'))
                         ),
                         Stream.concat(
-                                IntStream.range(0, board.noCols() - 1).mapToObj(i -> new Beam(new pl.kaq.model.Position(0, i), 'D')),
-                                IntStream.range(0, board.noCols() - 1).mapToObj(i -> new Beam(new Position(board.noRows() - 1, i), 'U'))
+                                range(0, board.noCols() - 1).mapToObj(i -> new Beam(new Position(0, i), 'D')),
+                                range(0, board.noCols() - 1).mapToObj(i -> new Beam(new Position(board.noRows() - 1, i), 'U'))
                         ))
                 .mapToInt(beam -> calculateEnergy(board, beam))
                 .max()
