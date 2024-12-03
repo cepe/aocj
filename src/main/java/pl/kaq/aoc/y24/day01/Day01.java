@@ -9,7 +9,6 @@ import static java.util.stream.Collectors.groupingBy;
 record Pair<T>(T first, T second) {
 }
 
-@SuppressWarnings("preview")
 public class Day01 extends Solution {
     @Override
     public String firstStar(String input) {
