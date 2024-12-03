@@ -3,8 +3,8 @@ plugins {
 }
 
 java {
-    sourceCompatibility = '23'
-    targetCompatibility = '23'
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
 }
 
 group = 'pl.kaq'

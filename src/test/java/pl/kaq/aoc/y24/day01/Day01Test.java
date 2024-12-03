@@ -1,7 +1,6 @@
-package pl.kaq.aoc.y24;
+package pl.kaq.aoc.y24.day01;
 
 import pl.kaq.TestBase;
-import pl.kaq.aoc.y24.day01.Day01;
 
 public class Day01Test extends TestBase {
     public Day01Test() {
