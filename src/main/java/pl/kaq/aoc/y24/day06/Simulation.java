@@ -13,7 +13,7 @@ class Simulation {
     private final Board board;
     private final DirectedPosition startingPosition;
     private final Set<Position> visitedPositions = new HashSet<>();
-    private final Set<DirectedPosition> visitedDirectPositions = new HashSet<>();
+    private final Set<DirectedPosition> visitedDirectedPositions = new HashSet<>();
 
     public Simulation(Board board) {
         this.board = board;
@@ -27,19 +27,19 @@ class Simulation {
     public boolean run() {
         var position = startingPosition;
         visitedPositions.clear();
-        visitedDirectPositions.clear();
+        visitedDirectedPositions.clear();
         visitedPositions.add(position.position());
-        visitedDirectPositions.add(position);
+        visitedDirectedPositions.add(position);
         while (board.onBoard(position.next().position())) {
             if (board.at(position.next().position()) == '#') {
                 position = position.rotateRight();
             } else {
                 position = position.next();
                 visitedPositions.add(position.position());
-                if (visitedDirectPositions.contains(position)) {
+                if (visitedDirectedPositions.contains(position)) {
                     return true;
                 }
-                visitedDirectPositions.add(position);
+                visitedDirectedPositions.add(position);
             }
         }
         return false;
