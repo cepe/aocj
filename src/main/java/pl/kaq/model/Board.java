@@ -38,9 +38,10 @@ public class Board {
 
 
     public void print() {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[0].length; col++) {
-                System.out.printf("%c", board[row][col]);
+        var rowLength = board[0].length;
+        for (char[] row : board) {
+            for (int col = 0; col < rowLength; col++) {
+                System.out.printf("%c", row[col]);
             }
             System.out.println();
         }
@@ -52,6 +53,10 @@ public class Board {
 
     public void setAt(int row, int col, char c) {
         board[row][col] = c;
+    }
+
+    public void setAt(Position position, char c) {
+        setAt(position.row(), position.col(), c);
     }
 
     public String asStringLine() {
@@ -72,5 +77,12 @@ public class Board {
 
     public BoardView startingAt(Position position) {
         return new BoardView(this, position);
+    }
+
+    public Position find(char character) {
+        return positions().stream()
+                .filter(position -> at(position) == character)
+                .findFirst()
+                .orElseThrow();
     }
 }
