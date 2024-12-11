@@ -1,5 +1,8 @@
 package pl.kaq.model;
 
+import java.util.List;
+import java.util.function.Function;
+
 public record Position(int row, int col) {
 
     public Position left() {
@@ -24,5 +27,11 @@ public record Position(int row, int col) {
 
     public Position plus(Position position) {
         return new Position(row + position.row(), col + position.col());
+    }
+
+    public List<Position> around() {
+        List<Function<Position, Position>> aroundFunctions =
+                List.of(Position::up, Position::down, Position::right, Position::left);
+        return aroundFunctions.stream().map(func -> func.apply(this)).toList();
     }
 }
