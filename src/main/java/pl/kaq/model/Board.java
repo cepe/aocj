@@ -93,4 +93,18 @@ public class Board {
         }
         return newBoard;
     }
+
+    public static Board empty(int row, int col) {
+        var newBoard = new Board(new char[row][col]);
+        for (var position : newBoard.positions()) {
+            newBoard.setAt(position, ' ');
+        }
+        return newBoard;
+    }
+
+    public void set(List<Position> positions) {
+        for (var position : positions) {
+            setAt(position, '█');
+        }
+    }
 }

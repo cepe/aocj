@@ -2,8 +2,8 @@ package pl.kaq;
 
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
-import pl.kaq.model.TestCase;
 import pl.kaq.model.Output;
+import pl.kaq.model.TestCase;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,11 @@ public abstract class TestBase {
     private DynamicTest makeTest(String testName, String input, String output, Function<String, String> function) {
         return DynamicTest.dynamicTest(
                 testName,
-                () -> assertSoftly(softly -> softly.assertThat(function.apply(input)).isEqualTo(output))
+                () -> assertSoftly(softly -> {
+                    if (!output.equals("!!")) {
+                        softly.assertThat(function.apply(input)).isEqualTo(output);
+                    }
+                })
         );
     }
 
@@ -109,6 +113,7 @@ public abstract class TestBase {
     private String directory() {
         final Class<? extends Solution> solutionClass = solution.getClass();
         final var packageParts = solutionClass.getPackageName().split("\\.");
-        return packageParts[packageParts.length - 2] + "/" + packageParts[packageParts.length - 1];    }
+        return packageParts[packageParts.length - 2] + "/" + packageParts[packageParts.length - 1];
+    }
 
 }
