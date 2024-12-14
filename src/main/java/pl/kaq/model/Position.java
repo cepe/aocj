@@ -34,4 +34,14 @@ public record Position(int row, int col) {
                 List.of(Position::up, Position::down, Position::right, Position::left);
         return aroundFunctions.stream().map(func -> func.apply(this)).toList();
     }
+
+    public List<Position> aroundHorizontal() {
+        List<Function<Position, Position>> aroundFunctions = List.of(Position::right, Position::left);
+        return aroundFunctions.stream().map(func -> func.apply(this)).toList();
+    }
+
+    public List<Position> aroundVertical() {
+        List<Function<Position, Position>> aroundFunctions = List.of(Position::up, Position::down);
+        return aroundFunctions.stream().map(func -> func.apply(this)).toList();
+    }
 }

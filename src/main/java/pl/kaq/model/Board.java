@@ -85,4 +85,12 @@ public class Board {
                 .findFirst()
                 .orElseThrow();
     }
+
+    public Board upscale(int scale) {
+        var newBoard = new Board(new char[board.length * scale][board[0].length * scale]);
+        for (var position : newBoard.positions()) {
+            newBoard.setAt(position, this.at(position.row() / scale, position.col() / scale));
+        }
+        return newBoard;
+    }
 }
