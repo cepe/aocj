@@ -1,6 +1,8 @@
 package pl.kaq;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import pl.kaq.model.Output;
 import pl.kaq.model.TestCase;
@@ -23,18 +25,21 @@ public abstract class TestBase {
         this.solution = solution;
     }
 
+    @DisplayName("★ first star")
     @TestFactory
-    public Stream<DynamicTest> tests() {
-        final var firstStarTestCases = testCases().stream()
-                .map(this::makeFirstStarTest);
-        final var secondStarTestCases = testCases().stream()
-                .map(this::makeSecondStarTest);
-        return Stream.concat(firstStarTestCases, secondStarTestCases);
+    public Stream<DynamicTest> first() {
+        return testCases().stream().map(this::makeFirstStarTest);
+    }
+
+    @DisplayName("★★ second star")
+    @TestFactory
+    public Stream<DynamicTest> second() {
+        return testCases().stream().map(this::makeSecondStarTest);
     }
 
     private DynamicTest makeFirstStarTest(TestCase testCase) {
         return makeTest(
-                "first star - " + testCase.inputName(),
+                testCase.inputName(),
                 testCase.input(),
                 testCase.output().firstStar(),
                 solution::firstStar
@@ -43,7 +48,7 @@ public abstract class TestBase {
 
     private DynamicTest makeSecondStarTest(TestCase testCase) {
         return makeTest(
-                "second star - " + testCase.inputName(),
+                testCase.inputName(),
                 testCase.input(),
                 testCase.output().secondStar(),
                 solution::secondStar

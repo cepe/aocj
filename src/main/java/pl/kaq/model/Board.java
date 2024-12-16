@@ -94,6 +94,14 @@ public class Board {
         return newBoard;
     }
 
+    public Board upscaleHorizontally(int scale) {
+        var newBoard = new Board(new char[board.length][board[0].length * scale]);
+        for (var position : newBoard.positions()) {
+            newBoard.setAt(position, this.at(position.row(), position.col() / scale));
+        }
+        return newBoard;
+    }
+
     public static Board empty(int row, int col) {
         var newBoard = new Board(new char[row][col]);
         for (var position : newBoard.positions()) {

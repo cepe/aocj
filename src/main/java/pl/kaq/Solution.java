@@ -20,6 +20,17 @@ public abstract class Solution {
         System.out.println(secondStar(input));
     }
 
+    public void runFirstStar(String fileName) {
+        var input = input(fileName);
+        System.out.println(firstStar(input));
+    }
+
+    public void runSecondStar(String fileName) {
+        var input = input(fileName);
+        System.out.println(secondStar(input));
+    }
+
+
     public Board board(String input) {
         return new Board(parseBoard(input));
     }
