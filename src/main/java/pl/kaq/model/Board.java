@@ -3,6 +3,7 @@ package pl.kaq.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -70,6 +71,18 @@ public class Board {
         for (int row = 0; row < noRows(); row++) {
             for (int col = 0; col < noCols(); col++) {
                 positions.add(new Position(row, col));
+            }
+        }
+        return positions;
+    }
+
+    public List<Position> positions(Predicate<Position> predicate) {
+        var positions = new ArrayList<Position>();
+        for (int row = 0; row < noRows(); row++) {
+            for (int col = 0; col < noCols(); col++) {
+                if (predicate.test(new Position(row, col))) {
+                    positions.add(new Position(row, col));
+                }
             }
         }
         return positions;

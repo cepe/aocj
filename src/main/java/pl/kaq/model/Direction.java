@@ -11,7 +11,39 @@ public enum Direction {
         this.movmentFunction = movmentFunction;
     }
 
-    Position move(Position position) {
+
+    public Position move(Position position) {
         return movmentFunction.apply(position);
+    }
+
+    public Position moveBack(Position position) {
+        return this.reverse().movmentFunction.apply(position);
+    }
+
+    private Direction reverse() {
+        return switch (this) {
+            case UP -> DOWN;
+            case LEFT -> RIGHT;
+            case DOWN -> UP;
+            case RIGHT -> LEFT;
+        };
+    }
+
+    public Direction onLeft() {
+        return switch (this) {
+            case UP -> LEFT;
+            case LEFT -> DOWN;
+            case DOWN -> RIGHT;
+            case RIGHT -> UP;
+        };
+    }
+
+    public Direction onRight() {
+        return switch (this) {
+            case UP -> RIGHT;
+            case LEFT -> UP;
+            case DOWN -> LEFT;
+            case RIGHT -> DOWN;
+        };
     }
 }
